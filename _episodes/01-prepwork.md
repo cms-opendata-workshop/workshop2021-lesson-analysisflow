@@ -1,0 +1,58 @@
+---
+title: "Prep-work: Warming up for the Higgs to Ditau analysis"
+teaching: 0
+exercises: 20
+questions:
+- "What will we do during this lesson?"
+- "What should I do before the lesson starts tomorrow?"
+objectives:
+- "Learn a little about the analysis example we will try to reproduce during the Analysis flow lessons tomorrow"
+- "Prepare the newer-version ROOT container (or environment), which will speed things up"
+keypoints:
+- "The Higgs to tautau analysis is good example of analysis that can be done with CMS open data in relatively easy way."
+- "A container (or environment) with a newer version of ROOT could really speed things up."
+---
+
+## Overview and some requested reading
+
+Tomorrow, we will try to use most of what you have been learning and reproduce an analysis which has been already replicated using open data in a simplified way.  You will find that you have been already thinking about it in previous lessons. Please, read [the very short description](http://opendata.web.cern.ch/record/12350) of this analysis.  You will notice, at the bottom of that page, that there is already some code written to perform this analysis.  However, it uses mostly a `ROOT` class called [RDataFrame](https://root.cern/doc/master/classROOT_1_1RDataFrame.html), which is a great tool to perform *columnar* analysis, but it is maybe not very well suited for a first approach.  We invite you to got through this code quickly and try to identify the different selection cuts that are applied. We will be re-implementing these selection criteria using an *event loop* analysis (which is more intuitive) rather than the columnar approach.
+
+## About the version of `ROOT` for our analysis
+
+Our lesson exercises will work just fine in our Docker or VM default environments. However, note that the version of `ROOT` that comes with CMSSW in those environments is a rather old version, 5.32.  Therefore, upgrading our `ROOT` environment to a newer version will really speed things up.  This is due, as far as we know, to the fact that `xrootd`, the protocol that we use to get access to ROOT files at CERN, has been drastically improved in later versions of the program.
+
+Alternatively (and optionally), if you have some disk space of a few GBs, you could copy the root files we will be needing locally.  This is shown in the last section of this episode.  This action will also speed things up considerably even if you choose not to upgrade your root environment (**we recommend this latter approach, i.e., work with your current ROOT environment but with the locally-downloaded root files**).
+
+## Getting a newer version of `ROOT`
+
+If you decide to work with an upgraded version of `ROOT`.  You can follow these instructions.
+
+If you are working with Docker, what we will do is to create a new container based on a recent `ROOT` container image.  You can follow the [same instructions](https://cms-opendata-workshop.github.io/workshop2021-lesson-docker/03-docker-for-cms-opendata/index.html#download-the-docker-image-for-cms-open-data-and-start-a-container) you used for creating your open data container, but instead of using the `cmsopendata/cmssw_5_3_32:latest` (or `cmsopendata/cmssw_5_3_32_vnc:latest`) image you will use a new stand-alone `ROOT` image.  The `ROOT` container image can be found in the [Docker hub](https://hub.docker.com/r/rootproject/root).  So, for example, for Linux, creating such a container would require a line like:
+
+~~~
+docker run -it --name myroot --net=host --env="DISPLAY" -v $HOME/.Xauthority:/home/cmsusr/.Xauthority:rw   rootproject/root:latest /bin/bash
+~~~
+{: .language-bash}
+
+Follow the corresponding instructions for your own operating system.
+
+In the virtual machine, you could also install a newer stack of `ROOT`.  You can get `ROOT` via CVMFS through the LCG releases. All information about the releases and contained packages can be found at [http://lcginfo.cern.ch](http://lcginfo.cern.ch). The following setup line works in the SLC6 shell and the “Outer shell” (SLC7) of the open data VM (we recommend using the Outer Shell).
+
+~~~
+source /cvmfs/sft.cern.ch/lcg/views/LCG_97/x86_64-slc6-gcc8-opt/setup.sh
+~~~
+{: .language-bash}
+
+You can check the root version with:
+
+~~~
+root --version
+~~~
+{: .language-bash}
+
+## Copying the needed files locally
+
+If you have some space, you can download the needed files from [here](https://cernbox.cern.ch/index.php/s/qmyDuHygLt9GrvE). Copy them over to your container or VM. This will also speed things up, even if you do not use the newer ROOT environment.
+
+
+{% include links.md %}
