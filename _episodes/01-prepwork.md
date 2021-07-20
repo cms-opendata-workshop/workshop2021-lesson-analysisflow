@@ -25,7 +25,7 @@ As with the othe lessons, tomorrow's lesson on analysis flow will have essential
 
 ## Copying the needed files locally
 
-For our hands-on activity tomorrow, if you have some space, you can download the needed files from [here](https://cernbox.cern.ch/index.php/s/rxBNWFhnVrXktAk). We very much recommend this as we need them for the final part of our analysis.  Copy them over to your container or VM. Working with these files locally will really speed up the analysis and so you will not need to work with an updated `ROOT` version (see below).  However, if you decide, for some reason, to connect remotely through `xrootd`, a newer version of `ROOT` may be needed.
+For our hands-on activity tomorrow, if you have some space, you can download the needed files from [here](https://cernbox.cern.ch/index.php/s/yzj0Qopaxtek5FJ). We very much recommend this as we need them for the final part of our analysis.  Copy them over to your container or VM. Working with these files locally will really speed up the analysis and so you will not need to work with an updated `ROOT` version (see below).  However, if you decide, for some reason, to connect remotely through `xrootd`, a newer version of `ROOT` may be needed.
 
 Alternatively, you can copy them using the `xrdcp` command like:
 
@@ -74,7 +74,6 @@ You can check the root version with:
 root --version
 ~~~
 {: .language-bash}
-
 
 
 

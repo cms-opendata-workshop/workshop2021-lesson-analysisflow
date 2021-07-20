@@ -25,7 +25,7 @@ As you saw, the sizes of the datasets we are interested in are massive.  Obvious
 
 ## Physics for POETs
 
-You have been exploring ways (implemented in code) of accessing the information we need from physics objects.  In particular, you have worked already with the `POET` repository.  For this demonstration we will use our fresh container (used in the last episode) and checkout this repository.  You can recycle the `POET` you already have in your container if you want to explore with us:
+You have been exploring ways (implemented in code) of accessing the information we need from physics objects.  In particular, you have worked already with the [`POET` repository](https://github.com/cms-legacydata-analyses/PhysObjectExtractorTool).  For this demonstration we will use our fresh container (used in the last episode) and check out this repository.  You can recycle the `POET` you already have in your container if you want to explore along with us:
 
 ```bash
 git clone git://github.com/cms-legacydata-analyses/PhysObjectExtractorTool.git
@@ -105,7 +105,7 @@ else: process.GlobalTag.globaltag = "START53_V27::All"
 ~~~
 {: .language-python}
 
-> Note that the index files are in the `data` directory.  Also, in that directory, you will find other index files and data quality json files.  Also note that the cfg file is not perfect: the `isData` flag does not control the execution over collisions or simulation index files any more.
+> The index files are in the `data` directory.  Also, in that directory, you will find other index files and data quality json files.  Also, note that the cfg file is not perfect: the `isData` flag does not control the execution over collisions or simulation index files any more, so you have to be careful about it.
 {: .testimonial}
 
 Now, let's run:
@@ -176,17 +176,17 @@ VertexAnalyzer.cc
 ~~~
 {: .output}
 
-Notice the one `filter` example in the crowd: the **SimpleMuTauFilter.cc**.  Of course, it was one designed with the workshop in mind.  Let's look at it.  You will see that it filters in the `pT` and `eta` variable for muons and taus and some other qualities.  In the original analysis of Higgs to ditau, this corresponds to the first four selection cuts.
+Notice the one `filter` example in the crowd: the **SimpleMuTauFilter.cc**.  Of course, it was one designed with the workshop in mind.  Let's [take a look at it](https://github.com/cms-legacydata-analyses/PhysObjectExtractorTool/blob/master/PhysObjectExtractor/src/SimpleMuTauFilter.cc).  You will see that it filters in the `pT` and `eta` variable for muons and taus and some other qualities.  In the original analysis of Higgs to ditau, this corresponds to the [first few selection cuts](https://github.com/cms-opendata-analyses/HiggsTauTauNanoAODOutreachAnalysis/blob/master/skim.cxx#:~:text=auto%20df2%20%3D%20MinimalSelection,df5%20%3D%20FilterGoodEvents(df4)%3B) (except for the trigger requirement).
 
-Now let us activate this filter in the configuration file and also add another one, which will deal with the trigger filtering.  We will have to uncomment these lines:
+There is another filter, which we could in principle use to filter on the trigger.  However, we will keep the trigger information for later processing, just to show its usage.  Now, let us activate the `SimpleMuTauFilter`in the configuration file.  We will have to uncomment these line:
 
 ~~~
 #---- Example of a CMSSW filter that can be used to cut on a given set of triggers
 #---- This filter, however, does know about prescales
 #---- A previous trigger study would be needed to cut hard on a given trigger or set of triggers
 #---- The filter can be added to the path below if needed but is not applied by default
-process.load("HLTrigger.HLTfilters.hltHighLevel_cfi")
-process.hltHighLevel.HLTPaths = cms.vstring('HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v*')
+#process.load("HLTrigger.HLTfilters.hltHighLevel_cfi")
+#process.hltHighLevel.HLTPaths = cms.vstring('HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v*')
 
 
 
@@ -205,7 +205,7 @@ process.mutaufilter = cms.EDFilter('SimpleMuTauFilter',
 ~~~
 {: .language-python}
 
-Finally, let's put them to work in the final `CMSSW` path that will be executed:
+Finally, let's put it to work in the final `CMSSW` path that will be executed:
 
 ~~~
 #---- Finally run everything!
@@ -213,17 +213,17 @@ Finally, let's put them to work in the final `CMSSW` path that will be executed:
 #---- separation by + implies that any order will work
 #---- One can put in or take out the needed processes
 if doPat:
-	process.p = cms.Path(process.hltHighLevel+process.mutaufilter+process.patDefaultSequence+process.myevents+process.myelectrons+process.mymuons+process.myphotons+process.myjets+...
+	process.p = cms.Path(process.mutaufilter+process.patDefaultSequence+process.myevents+process.myelectrons+process.mymuons+process.myphotons+process.myjets+process.mymets+process.mytaus+process.mytrigEvent+process.mypvertex+process.mytracks+process.mygenparticle+process.mytriggers)
 else:
-     	if isData: process.p = cms.Path(process.myevents+process.myelectrons+process.mymuons+process.myphotons+process.myjets+process.mymets+process.mytaus+process.myt...
-        else: process.p = cms.Path(process.selectedHadronsAndPartons * process.jetFlavourInfosAK5PFJets * process.myevents+process.myelectrons+process.mymuons+process...
+	if isData: process.p = cms.Path(process.myevents+process.myelectrons+process.mymuons+process.myphotons+process.myjets+process.mymets+process.mytaus+process.mytrigEvent+process.mypvertex+process.mytracks+process.mygenparticle+process.mytriggers)
+	else: process.p = cms.Path(process.selectedHadronsAndPartons * process.jetFlavourInfosAK5PFJets * process.myevents+process.myelectrons+process.mymuons+process.myphotons+process.myjets+process.mymets+process.mytaus+process.mytrigEvent+process.mypvertex+process.mytracks+process.mygenparticle+process.mytriggers)
 ~~~
 {: .language-python}
 
 Let's run again to see what happens to the file size:
 
 ```bash
-python python/poet_cfg.py #always good to check
+python python/poet_cfg.py #always good to check for syntax
 cmsRun python/poet_cfg.py True True > filter.log 2>&1 &
 ```
 
@@ -234,9 +234,12 @@ The output we get weights just `22K`:
 ~~~
 {: .output}
 
-This is just `~0.4%` of the original size, which means that the full dataset could be skimmed down to `~3GB` a much more manageable size.
+This is just `~0.4%` of the original size (ok, maybe in this particular case, the root file could actually be empty, but the reduction is indeed of that order), which means that the full dataset could be skimmed down to `~3GB`, a much more manageable size.
 
-Based on these simple checks, you could also estimate the time it would take to run over all the datasets we need using a single computer.  To be efficient, you will need a computer cluster, but we will leave that for the *Cloud Computing* lesson.  Fortunately, we have prepared these skims already at CERN, using CMS computing infrastructure.  The files you will find at [this place](https://cernbox.cern.ch/index.php/s/rxBNWFhnVrXktAk) (you probably already downloaded them during the prep-work) were done in essentially the same way, except that we dropped out objects like jets, photons, trigobject, trigger and tracks, which we won't be needing for this simple exercise.
+Based on these simple checks, you could also estimate the time it would take to run over all the datasets we need using a single computer.  To be efficient, you will need a computer cluster, but we will leave that for the *Cloud Computing* lesson.  Fortunately, we have prepared these skims already at CERN, using CERN/CMS computing infrastructure.  The files you will find at [this place](https://cernbox.cern.ch/index.php/s/yzj0Qopaxtek5FJ) (you probably already downloaded them during the prep-work) were obtained in essentially the same way, except that we dropped out objects like jets, photons, and trigEvent, which we won't be needing for this simple exercise.
+
+> Note that, at this point, you could decide to use an alternative way storing the output.  You could, for instance, decide to just dump a simple csv file with the information you need, or use another commercial library to change to a different output format.  We will continue, however, using the `ROOT` format, just because this is what we are familiar with and it will allow us to get some nice plots.
+{: .testimonial}
 
 This completes the first step of the analysis chain.
 
