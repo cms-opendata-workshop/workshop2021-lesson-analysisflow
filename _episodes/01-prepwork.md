@@ -20,7 +20,7 @@ Tomorrow, we will try to use most of what you have been learning and reproduce a
 
 ## The lesson's activities
 
-As with the othe lessons, tomorrow's lesson on analysis flow will have essentially three parts.  In the first one we will go together through a demonstration.  It is not mandatory to follow or copy every single step, but you are invited to do so if you wish.  For the second part, the hands-on one, you will work on your own with instructions provided in this lesson.  Instructors and facilitators will be there answer questions.  Lastly, you will be presented with a challenge that you may go on overtime to be able to complete (but do not worry it is not that difficult).  They day after tomorrow we will present a proposed solution to the challenge and have some time for questions and discussions.
+As with the other lessons, tomorrow's lesson on analysis flow will have essentially three parts.  In the first one we will go together through a demonstration.  It is not mandatory to follow or copy every single step, but you are invited to do so if you wish.  For the second part, the hands-on one, you will work on your own with instructions provided in this lesson.  Instructors and facilitators will be there to answer questions.  Lastly, you will be presented with an offline challenge.  They day after tomorrow we will present a proposed solution to the challenge and have some time for questions and discussions.
 
 
 ## Copying the needed files locally
@@ -46,7 +46,7 @@ xrdcp root://eospublic.cern.ch//eos/opendata/cms/upload/od-workshop/ws2021/VBF_H
 
 Our lesson exercises will work just fine in our Docker or VM default environments. However, note that the version of `ROOT` that comes with CMSSW in those environments is a rather old version, 5.32.  Therefore, upgrading our `ROOT` environment to a newer version will really speed things up if connecting remotely.  This is due, as far as we know, to the fact that `xrootd`, the protocol that we use to get access to ROOT files at CERN, has been drastically improved in later versions of the program.
 
-Alternatively (and optionally), if you have some disk space of a few GBs, you could copy the root files we will be needing locally.  This is shown in the last section of this episode.  This action will also speed things up considerably even if you choose not to upgrade your root environment (**we recommend this latter approach, i.e., work with your current ROOT environment but with the locally-downloaded root files**).
+Alternatively (and optionally), if you have some disk space of a couple of GBs, you could copy the root files we will be needing locally.  This is shown in the last section of this episode.  This action will also speed things up considerably even if you choose not to upgrade your root environment (**we recommend this latter approach, i.e., work with your current ROOT environment but with the locally-downloaded root files**).
 
 ## Getting a newer version of `ROOT`
 
