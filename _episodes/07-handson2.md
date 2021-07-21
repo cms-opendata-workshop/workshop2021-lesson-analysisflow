@@ -37,7 +37,7 @@ sdiff -w180 -b EventLoopAnalysisTemplate.cxx EventLoopAnalysisTemplate_upgrade.c
 Nos let's compile it and run:
 
 ```bash
-g++ -std=c++11 -g -O3 -Wall -Wextra -o EventLoopAnalysis EventLoopAnalysisTemplate.cxx $(root-config --cflags --libs)
+g++ -std=c++11 -g -O3 -Wall -Wextra -o EventLoopAnalysis EventLoopAnalysisTemplate_upgrade.cxx $(root-config --cflags --libs)
 ./EventLoopAnalysis
 ```
 
